@@ -1,6 +1,6 @@
 package com.github.xzzpig.pigutils.io;
 
-import com.sun.istack.internal.Nullable;
+import com.github.xzzpig.pigutils.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
