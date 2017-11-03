@@ -1,11 +1,11 @@
 package com.github.xzzpig.pigutils.pack;
 
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.annotation.Nullable;
+import com.github.xzzpig.pigutils.reflect.ClassUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
-import com.github.xzzpig.pigutils.reflect.ClassUtils;
 
 public class WrapperPackage extends Package {
 

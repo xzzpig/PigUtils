@@ -1,9 +1,9 @@
 package com.github.xzzpig.pigutils.databinder;
 
-import java.util.Map;
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.annotation.Nullable;
 
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
+import java.util.Map;
 
 public abstract class DataBinder {
 	@SuppressWarnings("unchecked")

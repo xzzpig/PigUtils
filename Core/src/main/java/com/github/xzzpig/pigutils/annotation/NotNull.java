@@ -1,4 +1,4 @@
-package com.github.xzzpig.pigutils.annoiation;
+package com.github.xzzpig.pigutils.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

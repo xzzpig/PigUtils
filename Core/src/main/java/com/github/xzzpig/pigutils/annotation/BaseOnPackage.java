@@ -1,9 +1,9 @@
-package com.github.xzzpig.pigutils.annoiation;
-
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+package com.github.xzzpig.pigutils.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
+
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * 标记基于某package<br />

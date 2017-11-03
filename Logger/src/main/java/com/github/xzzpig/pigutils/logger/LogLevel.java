@@ -1,14 +1,14 @@
 package com.github.xzzpig.pigutils.logger;
 
+import com.github.xzzpig.pigutils.annotation.BaseOnPackage;
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.annotation.Nullable;
+import com.github.xzzpig.pigutils.reflect.ClassUtils;
+
 import java.util.HashSet;
 import java.util.logging.Level;
 
-import com.github.xzzpig.pigutils.annoiation.BaseOnPackage;
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
-import com.github.xzzpig.pigutils.reflect.ClassUtils;
-
-@BaseOnPackage("com.github.xzzpig.pigutils.annoiation")
+@BaseOnPackage("com.github.xzzpig.pigutils.annotation")
 public class LogLevel {
 
 	private static HashSet<LogLevel> levels;

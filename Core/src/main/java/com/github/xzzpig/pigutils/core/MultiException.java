@@ -1,7 +1,7 @@
 package com.github.xzzpig.pigutils.core;
 
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

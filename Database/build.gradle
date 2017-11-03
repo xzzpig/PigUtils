@@ -4,6 +4,7 @@ repositories {
 }
 
 dependencies {
-    compile project(':Reflect')
     compile project(':Data')
+    testCompile "org.xerial:sqlite-jdbc:3.20.1"
+    testCompile 'junit:junit:4.12'
 }

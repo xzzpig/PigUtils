@@ -1,14 +1,10 @@
 package com.github.xzzpig.pigutils.pack;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.annotation.Nullable;
 
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
+import java.io.*;
+import java.util.Arrays;
 
 public class Package {
 

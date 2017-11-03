@@ -1,5 +1,8 @@
 package com.github.xzzpig.pigutils.pack.socket;
 
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.pack.Package;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Hashtable;
@@ -8,9 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.pack.Package;
 
 public abstract class PackageSocketServer implements Runnable {
 

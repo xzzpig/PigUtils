@@ -1,9 +1,9 @@
 package com.github.xzzpig.pigutils.logger;
 
+import com.github.xzzpig.pigutils.annotation.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.github.xzzpig.pigutils.annoiation.NotNull;
 
 public abstract class LogPrinter {
 

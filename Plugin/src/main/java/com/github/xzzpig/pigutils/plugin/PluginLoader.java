@@ -1,9 +1,9 @@
 package com.github.xzzpig.pigutils.plugin;
 
-import java.util.concurrent.atomic.AtomicReference;
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.annotation.Nullable;
 
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
+import java.util.concurrent.atomic.AtomicReference;
 
 public interface PluginLoader {
 	/**

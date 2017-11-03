@@ -1,10 +1,11 @@
 package com.github.xzzpig.pigutils.core;
 
-import com.github.xzzpig.pigutils.annoiation.API;
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
+import com.github.xzzpig.pigutils.annotation.API;
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.annotation.Nullable;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -74,11 +75,71 @@ public class RegistryHelper {
 
     @API
     public static void addUserPath(@NotNull String path) throws IOException {
-        String upath = getUserPath();
-        path = upath + ";" + path + ";";
-        while(path.contains(";;")){
+        if (hasUserPath(path))
+            return;
+        String userPath = getUserPath();
+        if (!path.matches(".*%\\w+%.*"))
+            path = new File(path).getAbsolutePath();
+        userPath = userPath + ";" + path + ";";
+        userPath = cleanPath(userPath);
+        setValue("HKEY_CURRENT_USER\\Environment", "Path", null, userPath);
+    }
+
+    @API
+    public static void removeUserPath(@NotNull String path) throws IOException {
+        String userPath = getUserPath();
+        if (!path.matches(".*%\\w+%.*"))
+            path = new File(path).getAbsolutePath();
+        path = path + ";";
+        path = cleanPath(path);
+        path = ";" + path;
+        userPath = ";" + userPath+";";
+        userPath = userPath.replace(path, "");
+        userPath = cleanPath(userPath);
+        setValue("HKEY_CURRENT_USER\\Environment", "Path", null, userPath);
+    }
+
+    @API
+    public static boolean hasUserPath(@NotNull String path) throws IOException {
+        String userPath = getUserPath();
+        if (!path.matches(".*%\\w+%.*"))
+            path = new File(path).getAbsolutePath();
+        path = path + ";";
+        path = cleanPath(path);
+        path = ";" + path;
+        userPath = ";" + userPath;
+        return userPath.contains(path);
+    }
+
+    private static String cleanPath(@Nullable String path) {
+        while (path.contains(";;")) {
             path = path.replace(";;", ";");
         }
-        setValue("HKEY_CURRENT_USER\\Environment", "Path", null, path);
+        if(path.startsWith(";"))
+            path = path.replaceFirst(";","");
+        path = path.replace(".;", ";");
+        path = path.replaceAll("\\\\*\\.*;", ";");
+        return path;
+    }
+
+    /**
+     * 设置用户环境变量
+     */
+    @API
+    public static void setUserEnv(@NotNull String key, String value) throws IOException {
+        setValue("HKEY_CURRENT_USER\\Environment", key, null, value);
+    }
+
+    /**
+     * 移除用户环境变量
+     */
+    @API
+    public static void removeUserEnv(@NotNull String key) throws IOException {
+        deleteValue("HKEY_CURRENT_USER\\Environment", key);
+    }
+
+    public static void main(String[] args) throws IOException {
+//        addUserPath("%JAVA_HOME%\\bin");
+        removeUserPath("%JAVA_HOME%\\bin");
     }
 }

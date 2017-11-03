@@ -1,18 +1,14 @@
 package com.github.xzzpig.pigutils.task.base;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import com.github.xzzpig.pigutils.annoiation.NotNull;
+import com.github.xzzpig.pigutils.annotation.NotNull;
 import com.github.xzzpig.pigutils.task.TaskObject;
 import com.github.xzzpig.pigutils.task.TaskState;
 import com.github.xzzpig.pigutils.task.TaskStream;
+
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class BaseTaskStream implements TaskStream {
 

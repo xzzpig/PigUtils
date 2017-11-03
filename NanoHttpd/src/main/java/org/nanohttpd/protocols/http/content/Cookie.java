@@ -39,7 +39,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * A simple cookie representation. This is old code and is flawed in many ways.
+ * A simple cookie representation. This is impl code and is flawed in many ways.
  * 
  * @author LordFokas
  */

@@ -1,18 +1,7 @@
 package com.github.xzzpig.pigutils.pack;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.annotation.Nullable;
 import com.github.xzzpig.pigutils.core.TransformManager;
 import com.github.xzzpig.pigutils.file.ExtendFile;
 import com.github.xzzpig.pigutils.json.JSONException;
@@ -23,6 +12,12 @@ import com.github.xzzpig.pigutils.pack.socket.eventdrive.EDPackageSocketServer;
 import com.github.xzzpig.pigutils.pack.socket.eventdrive.PackageSocketPackageEvent;
 import com.github.xzzpig.pigutils.reflect.MethodUtils;
 import com.github.xzzpig.pigutils.thread.TimeThread;
+
+import java.io.*;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FileTransferPackage extends WrapperPackage {
 

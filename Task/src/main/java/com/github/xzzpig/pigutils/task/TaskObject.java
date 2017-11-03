@@ -1,13 +1,13 @@
 package com.github.xzzpig.pigutils.task;
 
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.annotation.Nullable;
+import com.github.xzzpig.pigutils.core.IData;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
-import com.github.xzzpig.pigutils.core.IData;
 
 public class TaskObject implements IData {
 

@@ -1,9 +1,9 @@
 package com.github.xzzpig.pigutils.eddata;
 
-import java.util.Map;
-
-import com.github.xzzpig.pigutils.annoiation.NotNull;
+import com.github.xzzpig.pigutils.annotation.NotNull;
 import com.github.xzzpig.pigutils.event.Event;
+
+import java.util.Map;
 
 public class EventDriveData {
 

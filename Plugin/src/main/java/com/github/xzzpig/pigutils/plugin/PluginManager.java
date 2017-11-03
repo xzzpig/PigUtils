@@ -1,14 +1,14 @@
 package com.github.xzzpig.pigutils.plugin;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
-
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.annotation.Nullable;
 import com.github.xzzpig.pigutils.core.Registable;
 import com.github.xzzpig.pigutils.plugin.java.JavaPluginLoader;
 import com.github.xzzpig.pigutils.plugin.script.ScriptPluginLoader;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
 public class PluginManager implements Registable<PluginLoader> {
 

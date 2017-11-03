@@ -1,10 +1,10 @@
 package com.github.xzzpig.pigutils.core;
 
+import com.github.xzzpig.pigutils.annotation.NotNull;
+
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-
-import com.github.xzzpig.pigutils.annoiation.NotNull;
 
 public class TaskQuery extends Thread {
 

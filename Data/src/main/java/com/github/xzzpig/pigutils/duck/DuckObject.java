@@ -1,24 +1,15 @@
 package com.github.xzzpig.pigutils.duck;
 
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Proxy;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.github.xzzpig.pigutils.annoiation.BaseOnClass;
-import com.github.xzzpig.pigutils.annoiation.BaseOnPackage;
-import com.github.xzzpig.pigutils.annoiation.Const;
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
+import com.github.xzzpig.pigutils.annotation.*;
 import com.github.xzzpig.pigutils.data.DataUtils;
 import com.github.xzzpig.pigutils.data.DataUtils.EachResult;
 import com.github.xzzpig.pigutils.reflect.AnnotatedElementCheckEvent;
 import com.github.xzzpig.pigutils.reflect.ClassUtils;
 import com.github.xzzpig.pigutils.reflect.MethodUtils;
+
+import java.lang.reflect.*;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 鸭子对象<br/>

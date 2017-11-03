@@ -1,14 +1,14 @@
 package com.github.xzzpig.pigutils.data;
 
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
-
-import static com.github.xzzpig.pigutils.reflect.MethodUtils.*;
+import static com.github.xzzpig.pigutils.reflect.MethodUtils.checkThisArgs;
 
 /**
  * 将2个Object绑定起来

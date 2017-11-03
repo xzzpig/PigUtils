@@ -1,12 +1,12 @@
 package com.github.xzzpig.pigutils.pack.socket;
 
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.pack.Package;
+import com.github.xzzpig.pigutils.reflect.ClassUtils;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.pack.Package;
-import com.github.xzzpig.pigutils.reflect.ClassUtils;
 
 public abstract class PackageSocketClient extends PackageSocket implements Runnable {
 

@@ -1,5 +1,9 @@
 package com.github.xzzpig.pigutils.databinder;
 
+import com.github.xzzpig.pigutils.annotation.NotNull;
+import com.github.xzzpig.pigutils.annotation.Nullable;
+import com.github.xzzpig.pigutils.reflect.ClassUtils;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,10 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.github.xzzpig.pigutils.annoiation.NotNull;
-import com.github.xzzpig.pigutils.annoiation.Nullable;
-import com.github.xzzpig.pigutils.reflect.ClassUtils;
 
 public class MapDataBinder extends DataBinder {
 

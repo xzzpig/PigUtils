@@ -1,0 +1,10 @@
+repositories {
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compile project(':Database')
+    testCompile 'junit:junit:4.12'
+    testCompile "org.xerial:sqlite-jdbc:3.20.1"
+}

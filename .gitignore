@@ -9,3 +9,7 @@
 .classpath
 .project
 *.prefs
+src/main/resources/
+src/test/
+/dataSources/
+/.ideaDataSources/
