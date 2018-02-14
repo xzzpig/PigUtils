@@ -103,20 +103,27 @@ class DBUtils(connectionCreator: () -> Connection) {
 }
 
 @Throws(SQLException::class)
-inline fun Connection.update(sql: String, vararg params: Any): Int =
+fun Connection.update(sql: String, vararg params: Any): Int =
         prepareStatement(sql).apply {
             setParams(params)
         }.executeUpdate()
 
 @Throws(SQLException::class)
-inline fun <T> Connection.query(sql: String, resultSetHandler: ResultSetHandler<T>, vararg params: Any): T =
+fun Connection.insert(sql: String, vararg parms: Any): Boolean =
+        prepareStatement(sql).apply {
+            setParams(parms)
+        }.execute()
+
+
+@Throws(SQLException::class)
+fun <T> Connection.query(sql: String, resultSetHandler: ResultSetHandler<T>, vararg params: Any): T =
         prepareStatement(sql).apply {
             setParams(params)
         }.executeQuery().let(resultSetHandler::handle)
 
-inline fun PreparedStatement.setParams(vararg params: Any) {
+fun PreparedStatement.setParams(vararg params: Any) {
     for (i in 1..params.size)
-        this.setObject(i, params[i])
+        this.setObject(i, params[i - 1])
 }
 
 fun Connection.with(block: Connection.() -> Unit) {
