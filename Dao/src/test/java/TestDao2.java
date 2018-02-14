@@ -1,5 +1,5 @@
-import com.github.xzzpig.pigutils.dao.annotation.DBField;
-import com.github.xzzpig.pigutils.dao.annotation.DBTable;
+import com.xzzpig.pigutils.dao.annotation.DBField;
+import com.xzzpig.pigutils.dao.annotation.DBTable;
 
 @DBTable
 public class TestDao2 {

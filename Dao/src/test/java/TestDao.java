@@ -1,7 +1,7 @@
-import com.github.xzzpig.pigutils.dao.annotation.DBArray;
-import com.github.xzzpig.pigutils.dao.annotation.DBField;
-import com.github.xzzpig.pigutils.dao.annotation.DBForeign;
-import com.github.xzzpig.pigutils.dao.annotation.DBTable;
+import com.xzzpig.pigutils.dao.annotation.DBArray;
+import com.xzzpig.pigutils.dao.annotation.DBField;
+import com.xzzpig.pigutils.dao.annotation.DBForeign;
+import com.xzzpig.pigutils.dao.annotation.DBTable;
 
 import java.sql.JDBCType;
 

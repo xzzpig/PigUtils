@@ -1,0 +1,83 @@
+package com.xzzpig.pigutils.plugin.url;
+
+import com.xzzpig.pigutils.plugin.Plugin;
+import com.xzzpig.pigutils.plugin.PluginLoadResult;
+import com.xzzpig.pigutils.plugin.PluginManager;
+import com.xzzpig.pigutils.plugin.base.BasePlugin;
+import com.xzzpig.pigutils.plugin.base.BasePluginLoader;
+
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
+
+public abstract class URLPluginLoader extends BasePluginLoader {
+
+    protected URLPluginLoader() {
+    }
+
+    @Override
+    public Plugin loadPlugin(PluginManager manager, Object obj, AtomicReference<PluginLoadResult> result) {
+        Object[] objs;
+        URL url;
+        URLPluginInfo clPluginInfo;
+        try {
+            objs = (Object[]) obj;
+            url = (URL) objs[0];
+            clPluginInfo = (URLPluginInfo) objs[1];
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+        if (Arrays.stream(clPluginInfo.depends).filter(name->!manager.isPluginLoaded(name)).count() != 0) {
+            result.set(PluginLoadResult.WAIT);
+            return new WaitFakePlugin(clPluginInfo);
+        }
+        @SuppressWarnings("resource")
+        PluginClassloader classloader = new PluginClassloader(this.getClass().getClassLoader(), url);
+        classloader.addParents(Arrays.stream(clPluginInfo.depends).map(manager::getPlugin)
+                .filter(p->p.getClass().getClassLoader() instanceof URLClassLoader)
+                .map(p->(URLClassLoader) p.getClass().getClassLoader()).toArray(URLClassLoader[]::new));
+        try {
+            Class<? extends URLPlugin> clazz = classloader.loadClass(clPluginInfo.mainClass)
+                    .asSubclass(URLPlugin.class);
+            URLPlugin plugin = clazz.newInstance();
+            plugin.loadInfo(clPluginInfo);
+            result.set(PluginLoadResult.SUCCESS);
+            return plugin;
+        } catch (ClassNotFoundException | ClassCastException | InstantiationException | IllegalAccessException e) {
+            throw new URLPluginLoaderNewPluginException(e);
+        }
+    }
+
+    @Override
+    public void unloadPlugin(Plugin plugin) {
+        if (!(plugin instanceof URLPlugin))
+            return;
+        if (plugin.getClass().getClassLoader() instanceof PluginClassloader) {
+            try {
+                ((PluginClassloader) plugin.getClass().getClassLoader()).close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class WaitFakePlugin extends BasePlugin {
+
+        public WaitFakePlugin(URLPluginInfo info) {
+            this.depends = info.depends;
+            this.info = info.infos;
+            this.name = info.name;
+            this.pluginLoader = URLPluginLoader.this;
+        }
+
+        @Override
+        public void onDisable() {
+        }
+
+        @Override
+        public void onEnable() {
+        }
+    }
+}

@@ -1,3 +1,29 @@
-include 'Core','Task','Json','Event','Reflect','PackageSocket','File','WebSocket','Thread','Data','Other','Database','Databinder','Crypt','Pipeline','IO','Plugin','NanoHttpd','PigSimpleWeb','SQL','Paint','PigCommandService','Logger',"Dao"
+include(
+        'Core',
+        'Task',
+        'Json',
+        'Event',
+        'Reflect',
+        'PackageSocket',
+        'File',
+        'WebSocket',
+        'Thread',
+        'Data',
+        'Other',
+        'Database',
+        'Databinder',
+        'Crypt',
+        'Pipeline',
+        'IO',
+        'Plugin',
+        'NanoHttpd',
+        'PigSimpleWeb',
+        'SQL',
+        'Paint',
+        'PigCommandService',
+        'Logger',
+        "Dao",
+        "Web"
+)
 
 rootProject.name = 'PigUtils'

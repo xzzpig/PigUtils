@@ -2,6 +2,9 @@ repositories {
     jcenter()
     maven { url 'https://jitpack.io' }
 }
-
 dependencies {
+    testCompile 'junit:junit:4.12'
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile project(':Reflect')
 }

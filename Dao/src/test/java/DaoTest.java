@@ -1,6 +1,6 @@
-import com.github.xzzpig.pigutils.dao.DaoManager;
-import com.github.xzzpig.pigutils.database.Database;
-import com.github.xzzpig.pigutils.database.impl.DatabaseImpl;
+import com.xzzpig.pigutils.dao.DaoManager;
+import com.xzzpig.pigutils.database.Database;
+import com.xzzpig.pigutils.database.impl.DatabaseImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
