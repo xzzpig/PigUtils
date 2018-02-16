@@ -54,7 +54,7 @@ public class HTTP {
 	 * <pre>
 	 * {
 	 *    "HTTP-Version": "HTTP/1.1" (for example),
-	 *    "Status-Code": "200" (for example),
+     *    "Status-CodeGenerator": "200" (for example),
 	 *    "Reason-Phrase": "OK" (for example)
 	 * }
 	 * </pre>
@@ -98,7 +98,7 @@ public class HTTP {
 			// Response
 
 			jo.put("HTTP-Version", token);
-			jo.put("Status-Code", x.nextToken());
+            jo.put("Status-CodeGenerator", x.nextToken());
 			jo.put("Reason-Phrase", x.nextTo('\0'));
 			x.next();
 
@@ -138,7 +138,7 @@ public class HTTP {
 	 * <pre>
 	 * {
 	 *    "HTTP-Version": "HTTP/1.1" (for example),
-	 *    "Status-Code": "200" (for example),
+     *    "Status-CodeGenerator": "200" (for example),
 	 *    "Reason-Phrase": "OK" (for example)
 	 * }
 	 * </pre>
@@ -156,10 +156,10 @@ public class HTTP {
 		Iterator<String> keys = jo.keys();
 		String string;
 		StringBuilder sb = new StringBuilder();
-		if (jo.has("Status-Code") && jo.has("Reason-Phrase")) {
+        if (jo.has("Status-CodeGenerator") && jo.has("Reason-Phrase")) {
 			sb.append(jo.getString("HTTP-Version"));
 			sb.append(' ');
-			sb.append(jo.getString("Status-Code"));
+            sb.append(jo.getString("Status-CodeGenerator"));
 			sb.append(' ');
 			sb.append(jo.getString("Reason-Phrase"));
 		} else if (jo.has("Method") && jo.has("Request-URI")) {
@@ -176,7 +176,7 @@ public class HTTP {
 		sb.append(CRLF);
 		while (keys.hasNext()) {
 			string = keys.next();
-			if (!"HTTP-Version".equals(string) && !"Status-Code".equals(string) && !"Reason-Phrase".equals(string)
+            if (!"HTTP-Version".equals(string) && !"Status-CodeGenerator".equals(string) && !"Reason-Phrase".equals(string)
 					&& !"Method".equals(string) && !"Request-URI".equals(string) && !jo.isNull(string)) {
 				sb.append(string);
 				sb.append(": ");

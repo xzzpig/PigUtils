@@ -51,7 +51,7 @@ public class AsyncRunner implements Closeable {
      */
     @Override
     public void close() {
-        this.close();
+        this.closed();
         this.join();
     }
 
@@ -120,7 +120,7 @@ public class AsyncRunner implements Closeable {
         Thread timeoutWatcher = null;
         AtomicLong time = new AtomicLong(-1);
         if (TimeoutSupport) {
-            timeoutWatcher = new Thread(() -> {
+            timeoutWatcher = new Thread(()->{
                 while (!Thread.interrupted()) {
                     synchronized (time) {
                         try {

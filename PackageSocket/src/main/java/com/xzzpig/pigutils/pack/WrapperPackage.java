@@ -2,7 +2,6 @@ package com.xzzpig.pigutils.pack;
 
 import com.xzzpig.pigutils.annotation.NotNull;
 import com.xzzpig.pigutils.annotation.Nullable;
-import com.xzzpig.pigutils.reflect.ClassUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -15,7 +14,6 @@ public class WrapperPackage extends Package {
     }
 
     public WrapperPackage(@NotNull Package pack) {
-        ClassUtils.checkThisConstructorArgs(pack);
         this.pack = pack;
     }
 

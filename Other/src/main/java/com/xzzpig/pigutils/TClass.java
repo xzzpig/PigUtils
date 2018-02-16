@@ -1,7 +1,6 @@
 package com.xzzpig.pigutils;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -16,14 +15,14 @@ import java.util.jar.JarFile;
 
 public class TClass {
 	public static ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-	public static List<String> dirs = new ArrayList<String>();
+    public static List<String> dirs = new ArrayList<>();
 
 	public static void addDir(String dir) {
 		dirs.add(dir);
 	}
 
 	public static List<Class<?>> getClass(String packageName) {
-		List<Class<?>> r = new ArrayList<Class<?>>();
+        List<Class<?>> r = new ArrayList<>();
 		for (String cl : TClass.getClassName(packageName)) {
 			String[] arg = cl.replace('.', '簨').split("簨");
 			String name = arg[arg.length - 1];
@@ -86,7 +85,7 @@ public class TClass {
 	 * @return 类的完整名称
 	 */
 	private static List<String> getClassNameByFile(String filePath, List<String> className, boolean childPackage) {
-		List<String> myClassName = new ArrayList<String>();
+        List<String> myClassName = new ArrayList<>();
 		File file = new File(filePath);
 		File[] childFiles = file.listFiles();
 		for (File childFile : childFiles) {
@@ -119,7 +118,7 @@ public class TClass {
 	 */
 	@SuppressWarnings("resource")
 	private static List<String> getClassNameByJar(String jarPath, boolean childPackage) {
-		List<String> myClassName = new ArrayList<String>();
+        List<String> myClassName = new ArrayList<>();
 		String[] jarInfo = jarPath.split("!");
 		String jarFilePath = jarInfo[0].substring(jarInfo[0].indexOf("/"));
 		String packagePath = jarInfo[1].substring(1);
@@ -168,10 +167,9 @@ public class TClass {
 	 * @return 类的完整名称
 	 */
 	private static List<String> getClassNameByJars(URL[] urls, String packagePath, boolean childPackage) {
-		List<String> myClassName = new ArrayList<String>();
+        List<String> myClassName = new ArrayList<>();
 		if (urls != null) {
-			for (int i = 0; i < urls.length; i++) {
-				URL url = urls[i];
+            for (URL url : urls) {
 				String urlPath = url.getPath();
 				// 不必搜索classes文件夹
 				if (urlPath.endsWith("classes/")) {
@@ -203,14 +201,9 @@ public class TClass {
 			stack.push(clazzPath);
 
 			// 遍历类路径
-			while (stack.isEmpty() == false) {
+            while (!stack.isEmpty()) {
 				File path = stack.pop();
-				File[] classFiles = path.listFiles(new FileFilter() {
-					@Override
-					public boolean accept(File pathname) {
-						return pathname.isDirectory() || pathname.getName().endsWith(".class");
-					}
-				});
+                File[] classFiles = path.listFiles(pathname->pathname.isDirectory() || pathname.getName().endsWith(".class"));
 				for (File subFile : classFiles) {
 					if (subFile.isDirectory()) {
 						stack.push(subFile);
@@ -225,7 +218,7 @@ public class TClass {
 							}
 							boolean accessible = method.isAccessible();
 							try {
-								if (accessible == false) {
+                                if (!accessible) {
 									method.setAccessible(true);
 								}
 								// 设置类加载器
@@ -278,7 +271,7 @@ public class TClass {
 			}
 			boolean accessible = method.isAccessible(); // 获取方法的访问权限
 			try {
-				if (accessible == false) {
+                if (!accessible) {
 					method.setAccessible(true); // 设置方法的访问权限
 				}
 				// 获取系统类加载器

@@ -30,7 +30,6 @@ public class TMySql extends TSql {
                 e.printStackTrace();
             }
             Class.forName("com.mysql.jdbc.Driver");
-            return;
         } catch (ClassNotFoundException e) {
             File jdbc = new File("./lib/jdbc.jar");
             try {

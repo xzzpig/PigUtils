@@ -8,7 +8,7 @@ import java.util.List;
 public class Debuger {
 	public static boolean debug = false;
 
-	private static HashMap<String, Boolean> debugMap = new HashMap<String, Boolean>();
+    private static HashMap<String, Boolean> debugMap = new HashMap<>();
 
 	public static PrintStream out = System.err;
 
@@ -18,11 +18,8 @@ public class Debuger {
 		StackTraceElement stack[] = Thread.currentThread().getStackTrace();
 		String callName = stack[2].getClassName();
 		boolean isdebug;
-		if (debugMap.containsKey(callName))
-			isdebug = debugMap.get(callName);
-		else
-			isdebug = debug;
-		if (isdebug == false)
+        isdebug = debugMap.getOrDefault(callName, debug);
+        if (!isdebug)
 			return;
 		if (s instanceof Exception) {
 			((Exception) s).printStackTrace();

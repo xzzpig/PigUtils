@@ -33,35 +33,6 @@ package org.nanohttpd.protocols.http;
  * #L%
  */
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.regex.Matcher;
-
-import javax.net.ssl.SSLException;
-
 import org.nanohttpd.protocols.http.NanoHTTPD.ResponseException;
 import org.nanohttpd.protocols.http.content.ContentType;
 import org.nanohttpd.protocols.http.content.CookieHandler;
@@ -70,6 +41,18 @@ import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
 import org.nanohttpd.protocols.http.tempfiles.ITempFile;
 import org.nanohttpd.protocols.http.tempfiles.ITempFileManager;
+
+import javax.net.ssl.SSLException;
+import java.io.*;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
 
 public class HTTPSession implements IHTTPSession {
 
@@ -129,7 +112,7 @@ public class HTTPSession implements IHTTPSession {
 				: inetAddress.getHostAddress().toString();
 		this.remoteHostname = inetAddress.isLoopbackAddress() || inetAddress.isAnyLocalAddress() ? "localhost"
 				: inetAddress.getHostName().toString();
-		this.headers = new HashMap<String, String>();
+        this.headers = new HashMap<>();
 	}
 
 	/**
@@ -273,11 +256,7 @@ public class HTTPSession implements IHTTPSession {
 
 				fbuf.position(partDataStart);
 
-				List<String> values = parms.get(partName);
-				if (values == null) {
-					values = new ArrayList<String>();
-					parms.put(partName, values);
-				}
+                List<String> values = parms.computeIfAbsent(partName, k->new ArrayList<>());
 
 				if (partContentType == null) {
 					// Read the part into a string
@@ -333,11 +312,7 @@ public class HTTPSession implements IHTTPSession {
 				value = "";
 			}
 
-			List<String> values = p.get(key);
-			if (values == null) {
-				values = new ArrayList<String>();
-				p.put(key, values);
-			}
+            List<String> values = p.computeIfAbsent(key, k->new ArrayList<>());
 
 			values.add(value);
 		}
@@ -387,9 +362,9 @@ public class HTTPSession implements IHTTPSession {
 				this.inputStream.skip(this.splitbyte);
 			}
 
-			this.parms = new HashMap<String, List<String>>();
+            this.parms = new HashMap<>();
 			if (null == this.headers) {
-				this.headers = new HashMap<String, String>();
+                this.headers = new HashMap<>();
 			} else {
 				this.headers.clear();
 			}
@@ -398,7 +373,7 @@ public class HTTPSession implements IHTTPSession {
 			BufferedReader hin = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(buf, 0, this.rlen)));
 
 			// Decode the header into parms and header java properties
-			Map<String, String> pre = new HashMap<String, String>();
+            Map<String, String> pre = new HashMap<>();
 			decodeHeader(hin, pre, this.parms, this.headers);
 
 			if (null != this.remoteIp) {
@@ -444,14 +419,9 @@ public class HTTPSession implements IHTTPSession {
 			if (!keepAlive || r.isCloseConnection()) {
 				throw new SocketException("NanoHttpd Shutdown");
 			}
-		} catch (SocketException e) {
+        } catch (SocketException | SocketTimeoutException e) {
 			// throw it out to close socket object (finalAccept)
 			throw e;
-		} catch (SocketTimeoutException ste) {
-			// treat socket timeouts the same way we treat socket exceptions
-			// i.e. close the stream & finalAccept object by throwing the
-			// exception up the call stack.
-			throw ste;
 		} catch (SSLException ssle) {
 			Response resp = Response.newFixedLengthResponse(Status.INTERNAL_ERROR, NanoHTTPD.MIME_PLAINTEXT,
 					"SSL PROTOCOL FAILURE: " + ssle.getMessage());
@@ -585,7 +555,7 @@ public class HTTPSession implements IHTTPSession {
 	@Override
 	@Deprecated
 	public final Map<String, String> getParms() {
-		Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
 		for (String key : this.parms.keySet()) {
 			result.put(key, this.parms.get(key).get(0));
 		}

@@ -20,15 +20,14 @@ public class JDBCTypesUtils {
         jdbcTypeValues = new TreeMap<>();
         jdbcJavaTypes = new TreeMap<>();
         Field[] fields = java.sql.Types.class.getFields();
-        for (int i = 0, len = fields.length; i < len; ++i) {
-            if (Modifier.isStatic(fields[i].getModifiers())) {
+        for (Field field : fields) {
+            if (Modifier.isStatic(field.getModifiers())) {
                 try {
-                    String name = fields[i].getName();
-                    Integer value = (Integer) fields[i].get(java.sql.Types.class);
+                    String name = field.getName();
+                    Integer value = (Integer) field.get(Types.class);
                     jdbcTypes.put(name, value);
                     jdbcTypeValues.put(value, name);
-                } catch (IllegalArgumentException e) {
-                } catch (IllegalAccessException e) {
+                } catch (IllegalArgumentException | IllegalAccessException e) {
                 }
             }
         }
@@ -85,6 +84,6 @@ public class JDBCTypesUtils {
 
     public static boolean isJavaNumberType(int jdbcType) {
         Class<?> type = jdbcJavaTypes.get(jdbcType);
-        return (type == null) ? false : (Number.class.isAssignableFrom(type)) ? true : false;
+        return (type != null) && Number.class.isAssignableFrom(type);
     }
 }

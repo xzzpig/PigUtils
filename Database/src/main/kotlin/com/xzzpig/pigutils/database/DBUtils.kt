@@ -55,7 +55,7 @@ class DBUtils(connectionCreator: () -> Connection) {
                 throw TransactionException("the transaction is not at end")
             }
         }
-        creator().apply { threadLocal.set(this);autoCommit = false }
+        creator().run { TransactionConnection(this) }.apply { threadLocal.set(this);autoCommit = false }
     }
 
 
@@ -82,6 +82,21 @@ class DBUtils(connectionCreator: () -> Connection) {
         }
     }
 
+    val hasTransaction: Boolean
+        get() = threadLocal.get() != null
+
+    inline fun withTransaction(rethrow: Boolean = true, block: DBUtils.() -> Unit) {
+        try {
+            startTransaction()
+            block(this)
+        } catch (e: Exception) {
+            endTransaction(true)
+            if (rethrow) throw e
+        } finally {
+            if (hasTransaction) endTransaction()
+        }
+    }
+
     /**
      * commit并关闭事务
      * @see endTransaction
@@ -100,25 +115,29 @@ class DBUtils(connectionCreator: () -> Connection) {
         endTransaction(true)
     }
 
+    internal class TransactionConnection(private val conn: Connection) : Connection by conn
+
 }
+
+val Connection.isForTransaction: Boolean get() = this is DBUtils.TransactionConnection
 
 @Throws(SQLException::class)
 fun Connection.update(sql: String, vararg params: Any): Int =
         prepareStatement(sql).apply {
-            setParams(params)
+            setParams(*params)
         }.executeUpdate()
 
 @Throws(SQLException::class)
 fun Connection.insert(sql: String, vararg parms: Any): Boolean =
         prepareStatement(sql).apply {
-            setParams(parms)
+            setParams(*parms)
         }.execute()
 
 
 @Throws(SQLException::class)
 fun <T> Connection.query(sql: String, resultSetHandler: ResultSetHandler<T>, vararg params: Any): T =
         prepareStatement(sql).apply {
-            setParams(params)
+            setParams(*params)
         }.executeQuery().let(resultSetHandler::handle)
 
 fun PreparedStatement.setParams(vararg params: Any) {

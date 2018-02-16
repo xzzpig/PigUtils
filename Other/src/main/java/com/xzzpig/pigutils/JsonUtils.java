@@ -16,8 +16,7 @@ public class JsonUtils {
     }
 
     public static JSONObject bean2Json(Object bean) {
-        JSONObject json = new JSONObject(bean);
-        return json;
+        return new JSONObject(bean);
     }
 
     public static <T> T json2Bean(JSONObject json, Class<T> clazz) {

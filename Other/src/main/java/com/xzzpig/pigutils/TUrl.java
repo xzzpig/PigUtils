@@ -12,7 +12,7 @@ public class TUrl {
 
 	public static String getHtml(String urlString) {
 		try {
-			StringBuffer html = new StringBuffer();
+            StringBuilder html = new StringBuilder();
 			java.net.URL url = new java.net.URL(urlString); // 根据 String 表示形式创建
 															// URL 对象。
 			java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();// 返回一个

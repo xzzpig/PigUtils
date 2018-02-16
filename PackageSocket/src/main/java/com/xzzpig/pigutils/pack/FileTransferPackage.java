@@ -10,7 +10,6 @@ import com.xzzpig.pigutils.pack.socket.PackageSocket;
 import com.xzzpig.pigutils.pack.socket.eventdrive.EDPackageSocketClient;
 import com.xzzpig.pigutils.pack.socket.eventdrive.EDPackageSocketServer;
 import com.xzzpig.pigutils.pack.socket.eventdrive.PackageSocketPackageEvent;
-import com.xzzpig.pigutils.reflect.MethodUtils;
 import com.xzzpig.pigutils.thread.TimeThread;
 
 import java.io.*;
@@ -178,7 +177,6 @@ public class FileTransferPackage extends WrapperPackage {
 
     // Sender
     public static void sendFile(PackageSocket socket, @NotNull File file, @NotNull File baseDir, boolean synch) {
-        MethodUtils.checkThisArgs(socket, file, baseDir, synch);
         if (!baseDir.isDirectory())
             throw new IllegalArgumentException("baseDir should be Directory");
         if (!file.exists())

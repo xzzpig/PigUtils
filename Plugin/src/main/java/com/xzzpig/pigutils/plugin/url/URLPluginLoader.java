@@ -29,7 +29,7 @@ public abstract class URLPluginLoader extends BasePluginLoader {
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
-        if (Arrays.stream(clPluginInfo.depends).filter(name->!manager.isPluginLoaded(name)).count() != 0) {
+        if (Arrays.stream(clPluginInfo.depends).anyMatch(name->!manager.isPluginLoaded(name))) {
             result.set(PluginLoadResult.WAIT);
             return new WaitFakePlugin(clPluginInfo);
         }

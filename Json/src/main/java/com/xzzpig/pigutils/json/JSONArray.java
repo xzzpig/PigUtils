@@ -24,17 +24,15 @@ package com.xzzpig.pigutils.json;
  SOFTWARE.
  */
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A JSONArray is an ordered sequence of values. Its external text form is a
@@ -401,7 +399,7 @@ public class JSONArray implements Iterable<Object> {
 		return JSONObject.NULL.equals(this.opt(index));
 	}
 
-	@Override
+    @NotNull @Override
 	public Iterator<Object> iterator() {
 		return myArrayList.iterator();
 	}
@@ -590,9 +588,7 @@ public class JSONArray implements Iterable<Object> {
 				return myE;
 			}
 			return Enum.valueOf(clazz, val.toString());
-		} catch (IllegalArgumentException e) {
-			return defaultValue;
-		} catch (NullPointerException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
 			return defaultValue;
 		}
 	}
@@ -770,7 +766,7 @@ public class JSONArray implements Iterable<Object> {
 	 * @return this.
 	 */
 	public JSONArray put(double value) throws JSONException {
-		Double d = new Double(value);
+        Double d = value;
 		JSONObject.testValidity(d);
 		this.put(d);
 		return this;

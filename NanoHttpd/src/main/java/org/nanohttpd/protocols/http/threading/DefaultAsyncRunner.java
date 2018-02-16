@@ -33,11 +33,11 @@ package org.nanohttpd.protocols.http.threading;
  * #L%
  */
 
+import org.nanohttpd.protocols.http.ClientHandler;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.nanohttpd.protocols.http.ClientHandler;
 
 /**
  * Default threading strategy for NanoHTTPD.
@@ -57,7 +57,7 @@ public class DefaultAsyncRunner implements IAsyncRunner {
 	@Override
 	public void closeAll() {
 		// copy of the list for concurrency
-		for (ClientHandler clientHandler : new ArrayList<ClientHandler>(this.running)) {
+        for (ClientHandler clientHandler : new ArrayList<>(this.running)) {
 			clientHandler.close();
 		}
 	}

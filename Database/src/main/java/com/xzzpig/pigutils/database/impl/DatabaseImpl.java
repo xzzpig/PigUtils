@@ -3,8 +3,6 @@ package com.xzzpig.pigutils.database.impl;
 import com.xzzpig.pigutils.annotation.NotNull;
 import com.xzzpig.pigutils.annotation.Nullable;
 import com.xzzpig.pigutils.database.TableConstruct;
-import com.xzzpig.pigutils.reflect.ClassUtils;
-import com.xzzpig.pigutils.reflect.MethodUtils;
 
 import java.io.Closeable;
 import java.sql.*;
@@ -24,7 +22,6 @@ public class DatabaseImpl extends com.xzzpig.pigutils.database.Database implemen
     private List<String> tableNames;
 
     public DatabaseImpl(@NotNull Connection connection) {
-        ClassUtils.checkThisConstructorArgs(connection);
         try {
             if (connection.isClosed()) {
                 throw new IllegalArgumentException("connection is closed");
@@ -37,7 +34,6 @@ public class DatabaseImpl extends com.xzzpig.pigutils.database.Database implemen
 
     @NotNull
     public TableImpl createTable(@NotNull String name, @NotNull TableConstruct construct) throws SQLException {
-        MethodUtils.checkArgs(DatabaseImpl.class, "createTable", name, construct);
         TableImpl table = new TableImpl(name, this);
         table.setConstruct(construct);
         String sql = "CREATE TABLE \"" + name + "\" " + construct.toString() + ";";

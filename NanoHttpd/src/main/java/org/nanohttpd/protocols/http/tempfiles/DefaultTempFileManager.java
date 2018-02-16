@@ -33,12 +33,12 @@ package org.nanohttpd.protocols.http.tempfiles;
  * #L%
  */
 
+import org.nanohttpd.protocols.http.NanoHTTPD;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-
-import org.nanohttpd.protocols.http.NanoHTTPD;
 
 /**
  * Default strategy for creating and cleaning up temporary files.
@@ -61,7 +61,7 @@ public class DefaultTempFileManager implements ITempFileManager {
 		if (!tmpdir.exists()) {
 			tmpdir.mkdirs();
 		}
-		this.tempFiles = new ArrayList<ITempFile>();
+        this.tempFiles = new ArrayList<>();
 	}
 
 	@Override

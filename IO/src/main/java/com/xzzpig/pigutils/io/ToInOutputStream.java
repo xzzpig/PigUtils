@@ -8,23 +8,14 @@ import java.util.Vector;
 
 public class ToInOutputStream extends OutputStream {
 
-	class ToInInputStream extends InputStream {
-		@Override
-		public int available() throws IOException {
-			return buffers.size();
-		}
-
-		public ToInOutputStream getOutputStream() {
-			return ToInOutputStream.this;
-		}
-
-		@Override
-		public int read() throws IOException {
-			while (buffers.size() == 0)
-				;
-			synchronized (buffers) {
-				return buffers.remove(0);
-			}
+    public int[] toIntArray(boolean consume) {
+        synchronized (buffers) {
+            int[] ints = new int[buffers.size()];
+            for (int i = 0; i < ints.length; i++)
+                ints[i] = buffers.get(i);
+            if (consume)
+                buffers.clear();
+            return ints;
 		}
 	}
 
@@ -61,21 +52,30 @@ public class ToInOutputStream extends OutputStream {
 		return toIntArray(false);
 	}
 
-	public int[] toIntArray(boolean consume) {
+    @Override
+    public void write(int b) {
 		synchronized (buffers) {
-			int[] ints = new int[buffers.size()];
-			for (int i = 0; i < ints.length; i++)
-				ints[i] = (int) buffers.get(i);
-			if (consume)
-				buffers.clear();
-			return ints;
+            buffers.add(b);
 		}
 	}
 
-	@Override
-	public void write(int b) throws IOException {
-		synchronized (buffers) {
-			buffers.add(b);
-		}
-	}
+    class ToInInputStream extends InputStream {
+        @Override
+        public int available() {
+            return buffers.size();
+        }
+
+        public ToInOutputStream getOutputStream() {
+            return ToInOutputStream.this;
+        }
+
+        @Override
+        public int read() {
+            while (buffers.size() == 0)
+                ;
+            synchronized (buffers) {
+                return buffers.remove(0);
+            }
+        }
+    }
 }

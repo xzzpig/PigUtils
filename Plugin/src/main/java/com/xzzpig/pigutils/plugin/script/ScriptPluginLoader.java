@@ -30,7 +30,7 @@ public class ScriptPluginLoader extends BasePluginLoader {
      */
     public static final Map<String, Boolean> knownExtensionMap = new HashMap<>();
     public static PluginClassloader Classloader4ScriptManager = new PluginClassloader(
-            ScriptPluginLoader.class.getClassLoader(), new URL[0]);
+            ScriptPluginLoader.class.getClassLoader());
 
     public ScriptPluginLoader() {
     }
@@ -50,7 +50,7 @@ public class ScriptPluginLoader extends BasePluginLoader {
     public Plugin loadPlugin(PluginManager manager, Object obj, AtomicReference<PluginLoadResult> result) {
         URL url = (URL) obj;
         String type = getExtension(url);
-        PluginClassloader classloader = new PluginClassloader(Classloader4ScriptManager, new URL[0]);
+        PluginClassloader classloader = new PluginClassloader(Classloader4ScriptManager);
         ScriptEngineManager scriptmanager = new ScriptEngineManager(classloader);
         ScriptEngine engine = scriptmanager.getEngineByExtension(type);
         if (engine == null) {
@@ -73,7 +73,7 @@ public class ScriptPluginLoader extends BasePluginLoader {
         } catch (Exception e) {
         }
 
-        if (Arrays.stream(depends).filter(pluginName->!manager.isPluginLoaded(pluginName)).count() != 0) {
+        if (Arrays.stream(depends).anyMatch(pluginName->!manager.isPluginLoaded(pluginName))) {
             result.set(PluginLoadResult.WAIT);
             return setPluginDepends(setPluginName(new ScirptPlugin().setScriptEngine(engine), name), depends);
         }

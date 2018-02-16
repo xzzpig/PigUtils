@@ -33,32 +33,18 @@ package org.nanohttpd.protocols.http.response;
  * #L%
  */
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.zip.GZIPOutputStream;
-
 import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.content.ContentType;
 import org.nanohttpd.protocols.http.request.Method;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * HTTP response. Return one of these from serve().
@@ -131,6 +117,10 @@ public class Response implements Closeable {
 
 	private long contentLength;
 
+    /**
+     * copy of the header map with all the keys lowercase for faster searching.
+     */
+    private final Map<String, String> lowerCaseHeader = new HashMap<>();
 	/**
 	 * Headers for the HTTP response. Use addHeader() to add lines. the
 	 * lowercase map is automatically kept up to date.
@@ -142,13 +132,8 @@ public class Response implements Closeable {
 		public String put(String key, String value) {
 			lowerCaseHeader.put(key == null ? key : key.toLowerCase(), value);
 			return super.put(key, value);
-		};
-	};
-
-	/**
-	 * copy of the header map with all the keys lowercase for faster searching.
-	 */
-	private final Map<String, String> lowerCaseHeader = new HashMap<String, String>();
+        }
+    };
 
 	/**
 	 * The request method that spawned this response.

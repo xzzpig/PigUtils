@@ -315,9 +315,7 @@ public class Logger {
             if (!(obj instanceof LogInstance))
                 return false;
             LogInstance instance = (LogInstance) obj;
-            if (!instance.logFormater.equals(logFormater))
-                return false;
-            return instance.logPrinters.size() == logPrinters.size() && instance.logPrinters.containsAll(logPrinters);
+            return instance.logFormater.equals(logFormater) && instance.logPrinters.size() == logPrinters.size() && instance.logPrinters.containsAll(logPrinters);
         }
     }
 }

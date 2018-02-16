@@ -35,6 +35,12 @@ public class TableImpl implements com.xzzpig.pigutils.database.Table {
         StringBuilder wheresb = new StringBuilder();
         int j = 0;
         List<Object> objs = new ArrayList<>();
+        addObject(where, wheresb, j, objs);
+        db.execSql("DELETE FROM \"" + name + "\" WHERE " + wheresb, objs);
+        return this;
+    }
+
+    private void addObject(@NotNull Map<String, Object> where, StringBuilder wheresb, int j, List<Object> objs) {
         for (Entry<String, Object> entry : where.entrySet()) {
             Object obj = entry.getValue();
             String str;
@@ -46,8 +52,6 @@ public class TableImpl implements com.xzzpig.pigutils.database.Table {
                 wheresb.append(',').append(entry.getKey()).append(" = ").append(str);
             j++;
         }
-        db.execSql("DELETE FROM \"" + name + "\" WHERE " + wheresb, objs);
-        return this;
     }
 
     public TableImpl delete(@NotNull String where) throws SQLException {
@@ -153,22 +157,11 @@ public class TableImpl implements com.xzzpig.pigutils.database.Table {
 
         int j = 0;
         List<Object> objs = new ArrayList<>();
-        for (Entry<String, Object> entry : map.entrySet()) {
-            Object obj = entry.getValue();
-            String str;
-            objs.add(obj);
-            str = "?";
-            if (j == 0)
-                sets.append(entry.getKey()).append(" = ").append(str);
-            else
-                sets.append(',').append(entry.getKey()).append(" = ").append(str);
-            j++;
-        }
+        addObject(map, sets, j, objs);
         if (where != null) {
             sb.append(sets).append(" WHERE ").append(where);
             if (wherePrepare != null)
-                for (Object object : wherePrepare)
-                    objs.add(object);
+                Collections.addAll(objs, wherePrepare);
         }
         SQLException[] exceptions = new SQLException[1];
         if (objs.size() == 0)

@@ -33,7 +33,7 @@ public class TString {
     }
 
     public static String getRandomCH(int len) {
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
         for (int i = 0; i < len; i++) {
             String str = null;
             int hightPos, lowPos; // 定义高低位
@@ -48,9 +48,9 @@ public class TString {
             } catch (UnsupportedEncodingException ex) {
                 ex.printStackTrace();
             }
-            ret += str;
+            ret.append(str);
         }
-        return ret;
+        return ret.toString();
     }
 
     public static String sub(String source, String pre, String suf) {
@@ -60,7 +60,7 @@ public class TString {
     }
 
     public static String toString(Object object) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (object instanceof List<?>) {
             List<?> list = (List<?>) object;
             sb.append('[');
@@ -79,13 +79,13 @@ public class TString {
     }
 
     public static String toUnicodeString(String s) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (c >= 0 && c <= 255) {
                 sb.append(c);
             } else {
-                sb.append("\\u" + Integer.toHexString(c));
+                sb.append("\\u").append(Integer.toHexString(c));
             }
         }
         return sb.toString();

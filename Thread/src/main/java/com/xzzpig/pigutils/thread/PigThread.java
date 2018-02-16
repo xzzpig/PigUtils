@@ -12,7 +12,7 @@ public class PigThread extends Thread implements EventAdapter {
     }
 
     public PigThread(Thread t) {
-        super(t::run);
+        super(t);
     }
 
     @Override

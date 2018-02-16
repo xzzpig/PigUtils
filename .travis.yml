@@ -1,2 +1,4 @@
 language: java
-install: gradle install
+before_install:
+  - chmod +x ./gradlew
+install: ./gradlew install

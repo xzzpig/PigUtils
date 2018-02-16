@@ -315,9 +315,7 @@ public class DaoManager {
         Object obj = null;
         try {
             obj = foreignClass.newInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
         boolean access = dbField.DaoFiled.isAccessible();
@@ -435,6 +433,7 @@ public class DaoManager {
      * @param baseFields 以哪些字段值为基础填充obj
      * @return == obj
      */
+    @SuppressWarnings("unchecked")
     public @NotNull <T> T fill(@NotNull T obj, @Nullable String... baseFields) throws SQLException, InstantiationException, IllegalAccessException {
         TableConstruct tableConstruct = solveTableClass(obj.getClass());
         if (baseFields == null || baseFields.length == 0) {
@@ -484,6 +483,7 @@ public class DaoManager {
         return select(clazz, selector);
     }
 
+    @SuppressWarnings("unchecked")
     public @Nullable <T> T select(Class<T> clazz, @NotNull Object keyValue) throws IllegalAccessException, SQLException, InstantiationException {
         if (cacheMap.containsKey(clazz) && cacheMap.get(clazz).containsKey(keyValue))
             return (T) cacheMap.get(clazz).get(keyValue);

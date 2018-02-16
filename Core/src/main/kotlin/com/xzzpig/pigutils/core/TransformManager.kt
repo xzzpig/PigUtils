@@ -157,6 +157,7 @@ class TransformManager {
                 if (useFor != null && !useFor.equals(transformer.useFor(), ignoreCase = true))
                     continue
                 try {
+                    @Suppress("UNCHECKED_CAST")
                     r = (transformer as? Transformer<F, R>)?.transform(from, extras, clazz)
                 } catch (e: Exception) {
                     transformer.onError(e)
@@ -195,6 +196,7 @@ class TransformManager {
     interface Transformer<in F, out R> {
         fun accept(o: Any): Boolean {
             return try {
+                @Suppress("UNCHECKED_CAST")
                 o as F
                 true
             } catch (e: Exception) {

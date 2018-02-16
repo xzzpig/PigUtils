@@ -19,8 +19,14 @@ fun Closeable.with(block: Closeable.() -> Unit) {
 
 class LaterBlock<T>(val later: T.() -> Unit, val it: T) {
     inline fun <R> map(block: T.() -> R): R {
-        val result = block(it)
-        later(it)
+        val result: R
+        try {
+            result = block(it)
+        } catch (e: Exception) {
+            throw e
+        } finally {
+            later(it)
+        }
         return result
     }
 }
@@ -66,17 +72,17 @@ fun <T> Array<T>.stream(startInclusive: Int = 0, endExclusive: Int = this.size):
     return Arrays.stream(this, startInclusive, endExclusive)
 }
 
-inline fun justTry(block: () -> Unit) {
+inline fun justTry(printStackTrace: Boolean = false, block: () -> Unit) {
     try {
         block()
     } catch (e: Exception) {
-
+        if (printStackTrace) e.printStackTrace()
     }
 }
 
 inline operator fun <reified T> IData.get(key: String, defaultValue: T? = null): T? = get(key, T::class.java, defaultValue)
 
-inline fun <reified T> IData.getOrSet(key: String, defaultValue: T?): T? = getOrSet(key, T::class.java, defaultValue)
+inline fun <reified T> IData.getOrSet(key: String, noinline block: () -> (T?)): T? = getOrSet(key, T::class.java, block)
 
 fun String.recoding(source: Charset = Charsets.ISO_8859_1, target: Charset = Charsets.UTF_8): String = toByteArray(source).toString(target)
 
@@ -94,12 +100,10 @@ fun <F, R> TransformManager.Transformer<F, R>.wrap(useFor: String? = null, mark:
 
 fun Iterable<*>.flatToString(start: String = "[", end: String = "]", split: String = ","): String {
     val sb = StringBuffer(start)
-    var index = 0
-    for (it in this) {
+    for ((index, it) in this.withIndex()) {
         if (index != 0)
             sb.append(split)
         sb.append(it)
-        index++
     }
     sb.append(end)
     return sb.toString()
@@ -118,7 +122,6 @@ class WeakRef<in R, out T>(private val block: () -> T) : ReadOnlyProperty<R, T> 
      * @return the property value.
      */
     override fun getValue(thisRef: R, property: KProperty<*>): T {
-        val any by lazy(block)
         return ref?.get() ?: block().apply {
             ref?.clear()
             ref = WeakReference(this)

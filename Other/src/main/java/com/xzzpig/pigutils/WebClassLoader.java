@@ -30,10 +30,9 @@ public class WebClassLoader extends ClassLoader {
 	}
 
 	@Override
-	protected Class<?> findClass(String name) throws ClassNotFoundException {
+    protected Class<?> findClass(String name) {
 		try {
-			Class<?> r = super.findClass(name);
-			return r;
+            return super.findClass(name);
 		} catch (ClassNotFoundException e1) {
 		}
 		byte[] b;

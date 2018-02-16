@@ -4,6 +4,7 @@ import com.xzzpig.pigutils.annotation.NotNull;
 import com.xzzpig.pigutils.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MultiException extends Exception {
@@ -33,8 +34,7 @@ public class MultiException extends Exception {
 
     public MultiException add(@Nullable Exception... es) {
         if (es != null)
-            for (Exception exception : es)
-                exceptions.add(exception);
+            Collections.addAll(exceptions, es);
         return this;
     }
 

@@ -59,9 +59,7 @@ public class TData implements Serializable {
 	public boolean equals(TData data) {
 		if (!data.strs.equals(this.strs))
 			return false;
-		if (!data.ints.equals(this.ints))
-			return false;
-        return data.boos.equals(this.boos) && data.obs.equals(this.obs);
+        return data.ints.equals(this.ints) && data.boos.equals(this.boos) && data.obs.equals(this.obs);
     }
 
 	public boolean getBoolan(String key) {

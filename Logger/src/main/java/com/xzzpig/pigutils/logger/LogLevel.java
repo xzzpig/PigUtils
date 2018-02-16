@@ -3,7 +3,6 @@ package com.xzzpig.pigutils.logger;
 import com.xzzpig.pigutils.annotation.BaseOnPackage;
 import com.xzzpig.pigutils.annotation.NotNull;
 import com.xzzpig.pigutils.annotation.Nullable;
-import com.xzzpig.pigutils.reflect.ClassUtils;
 
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -23,7 +22,6 @@ public class LogLevel {
     private int level;
 
     private LogLevel(@NotNull String name, @Nullable int level) {
-        ClassUtils.checkThisConstructorArgs(name, level);
         this.name = name.toUpperCase();
         this.level = level;
         if (levels == null)

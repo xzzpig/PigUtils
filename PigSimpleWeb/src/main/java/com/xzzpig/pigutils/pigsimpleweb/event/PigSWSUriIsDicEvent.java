@@ -14,7 +14,6 @@ public class PigSWSUriIsDicEvent extends PigSWSEvent {
 	public PigSWSUriIsDicEvent(PigSimpleWebServer psws, String uri) {
 		super(psws);
 		this.uri = uri;
-		// TODO Auto-generated constructor stub
 	}
 
 	public String getFileName() {

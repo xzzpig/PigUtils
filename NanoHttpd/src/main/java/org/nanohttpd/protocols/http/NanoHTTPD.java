@@ -33,32 +33,6 @@ package org.nanohttpd.protocols.http;
  * #L%
  */
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.security.KeyStore;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.TrustManagerFactory;
-
 import org.nanohttpd.protocols.http.request.Method;
 import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
@@ -70,6 +44,21 @@ import org.nanohttpd.protocols.http.threading.DefaultAsyncRunner;
 import org.nanohttpd.protocols.http.threading.IAsyncRunner;
 import org.nanohttpd.util.IFactory;
 import org.nanohttpd.util.IFactoryThrowing;
+
+import javax.net.ssl.*;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.security.KeyStore;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * A simple, tiny, nicely embeddable HTTP server in Java NanoHTTPD
@@ -210,7 +199,7 @@ public abstract class NanoHTTPD {
 	 *         <code>List&lt;String&gt;</code> (a list of the values supplied).
 	 */
 	protected static Map<String, List<String>> decodeParameters(String queryString) {
-		Map<String, List<String>> parms = new HashMap<String, List<String>>();
+        Map<String, List<String>> parms = new HashMap<>();
 		if (queryString != null) {
 			StringTokenizer st = new StringTokenizer(queryString, "&");
 			while (st.hasMoreTokens()) {
@@ -218,7 +207,7 @@ public abstract class NanoHTTPD {
 				int sep = e.indexOf('=');
 				String propertyName = sep >= 0 ? decodePercent(e.substring(0, sep)).trim() : decodePercent(e).trim();
 				if (!parms.containsKey(propertyName)) {
-					parms.put(propertyName, new ArrayList<String>());
+                    parms.put(propertyName, new ArrayList<>());
 				}
 				String propertyValue = sep >= 0 ? decodePercent(e.substring(sep + 1)) : null;
 				if (propertyValue != null) {
@@ -227,9 +216,9 @@ public abstract class NanoHTTPD {
 			}
 		}
 		return parms;
-	};
+    }
 
-	/**
+    /**
 	 * Decode percent encoded <code>String</code> values.
 	 * 
 	 * @param str
@@ -347,7 +336,7 @@ public abstract class NanoHTTPD {
 
 	public static Map<String, String> mimeTypes() {
 		if (MIME_TYPES == null) {
-			MIME_TYPES = new HashMap<String, String>();
+            MIME_TYPES = new HashMap<>();
 			loadMimeTypes(MIME_TYPES, "META-INF/nanohttpd/default-mimetypes.properties");
 			loadMimeTypes(MIME_TYPES, "META-INF/nanohttpd/mimetypes.properties");
 			if (MIME_TYPES.isEmpty()) {
@@ -499,7 +488,7 @@ public abstract class NanoHTTPD {
 	 */
 	@SuppressWarnings("deprecation")
 	public Response serve(IHTTPSession session) {
-		Map<String, String> files = new HashMap<String, String>();
+        Map<String, String> files = new HashMap<>();
 		Method method = session.getMethod();
 		if (Method.PUT.equals(method) || Method.POST.equals(method)) {
 			try {

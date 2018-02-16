@@ -174,9 +174,7 @@ public class EventBus {
      * @return this
      */
     public EventBus unregListener(Class<Listener> c) {
-        unregRunner(r->{
-            return r.getInfo() != null && r.getInfo().get("class", String.class, "").equalsIgnoreCase(c.getName());
-        });
+        unregRunner(r->r.getInfo() != null && r.getInfo().get("class", String.class, "").equalsIgnoreCase(c.getName()));
         return this;
     }
 
@@ -186,9 +184,7 @@ public class EventBus {
      * @return this
      */
     public EventBus unregListener(Listener listener) {
-        unregRunner(r->{
-            return r.getInfo() != null && r.getInfo().get("listener", String.class, "").equalsIgnoreCase(listener.toString());
-        });
+        unregRunner(r->r.getInfo() != null && r.getInfo().get("listener", String.class, "").equalsIgnoreCase(listener.toString()));
         return this;
     }
 

@@ -16,12 +16,12 @@ class ObservableData(private val data: IData) : IData {
 
     override fun clear() {
         observers.forEach { it.onClear(this) }
-        entries.filter { (_, v) -> v is Observable }.forEach { (k, v) -> (v as? Observable)?.onUnbind(this, k!!) }
+        entries.filter { (_, v) -> v is Observable }.forEach { (k, v) -> (v as? Observable)?.onUnbind(this, k) }
         data.clear()
     }
 
     override fun <T : Any?> get(key: String, clazz: Class<T>): T? =
-            data.get(key, clazz).apply {
+            data[key, clazz].apply {
                 observers.forEach { it.onGet(this@ObservableData, key, this) }
             }
 
@@ -29,7 +29,7 @@ class ObservableData(private val data: IData) : IData {
 
     override fun remove(key: String): Any? =
             data.remove(key).apply {
-                (this as? Observable)?.onUnbind(this@ObservableData, key!!)
+                (this as? Observable)?.onUnbind(this@ObservableData, key)
                 observers.forEach { it.onRemove(this@ObservableData, key, this) }
 
             }

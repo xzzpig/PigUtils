@@ -1,6 +1,7 @@
 package com.xzzpig.pigutils.json;
 
 import com.xzzpig.pigutils.core.IData;
+import kotlin.jvm.functions.Function0;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -339,9 +340,7 @@ public class JSONObject implements IData {
             Object fo = null;
             try {
                 fo = f.get(o);
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (IllegalArgumentException | IllegalAccessException e) {
                 e.printStackTrace();
             }
             if (fo == null)
@@ -563,8 +562,8 @@ public class JSONObject implements IData {
                 } else {
                     Long myLong = new Long(string);
                     if (string.equals(myLong.toString())) {
-                        if (myLong.longValue() == myLong.intValue()) {
-                            return Integer.valueOf(myLong.intValue());
+                        if (myLong == myLong.intValue()) {
+                            return myLong.intValue();
                         }
                         return myLong;
                     }
@@ -708,7 +707,7 @@ public class JSONObject implements IData {
 
     static Writer writeValue(Writer writer, Object value, int indentFactor, int indent)
             throws JSONException, IOException {
-        if (value == null || value.equals(null)) {
+        if (value == null) {
             writer.write("null");
         } else if (value instanceof JSONObject) {
             ((JSONObject) value).write(writer, indentFactor, indent);
@@ -801,7 +800,7 @@ public class JSONObject implements IData {
      * @return The object associated with the key.
      * @throws JSONException if the key is not found.
      */
-    public Object get(String key) throws JSONException {
+    public Object get(@NotNull String key) throws JSONException {
         if (key == null) {
             throw new JSONException("Null key.");
         }
@@ -854,7 +853,7 @@ public class JSONObject implements IData {
      * @throws JSONException if the value is not a Boolean or the String "true" or
      *                       "false".
      */
-    public boolean getBoolean(String key) throws JSONException {
+    public boolean getBoolean(@NotNull String key) throws JSONException {
         Object object = this.get(key);
         if (object.equals(Boolean.FALSE) || (object instanceof String && ((String) object).equalsIgnoreCase("false"))) {
             return false;
@@ -873,7 +872,7 @@ public class JSONObject implements IData {
      * @throws JSONException if the key is not found or if the value is not a Number
      *                       object and cannot be converted to a number.
      */
-    public double getDouble(String key) throws JSONException {
+    public double getDouble(@NotNull String key) throws JSONException {
         Object object = this.get(key);
         try {
             return object instanceof Number ? ((Number) object).doubleValue() : Double.parseDouble((String) object);
@@ -911,7 +910,7 @@ public class JSONObject implements IData {
      * @throws JSONException if the key is not found or if the value cannot be converted
      *                       to an integer.
      */
-    public int getInt(String key) throws JSONException {
+    public int getInt(@NotNull String key) throws JSONException {
         Object object = this.get(key);
         try {
             return object instanceof Number ? ((Number) object).intValue() : Integer.parseInt((String) object);
@@ -958,7 +957,7 @@ public class JSONObject implements IData {
      * @throws JSONException if the key is not found or if the value cannot be converted
      *                       to a long.
      */
-    public long getLong(String key) throws JSONException {
+    public long getLong(@NotNull String key) throws JSONException {
         Object object = this.get(key);
         try {
             return object instanceof Number ? ((Number) object).longValue() : Long.parseLong((String) object);
@@ -974,7 +973,7 @@ public class JSONObject implements IData {
      * @return A string which is the value.
      * @throws JSONException if there is no string value for the key.
      */
-    public String getString(String key) throws JSONException {
+    public String getString(@NotNull String key) throws JSONException {
         Object object = this.get(key);
         if (object instanceof String) {
             return (String) object;
@@ -1050,7 +1049,7 @@ public class JSONObject implements IData {
      *
      * @return A keySet.
      */
-    public Set<String> keySet() {
+    @NotNull public Set<String> keySet() {
         return this.map.keySet();
     }
 
@@ -1213,9 +1212,7 @@ public class JSONObject implements IData {
                 return myE;
             }
             return Enum.valueOf(clazz, val.toString());
-        } catch (IllegalArgumentException e) {
-            return defaultValue;
-        } catch (NullPointerException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             return defaultValue;
         }
     }
@@ -1354,9 +1351,8 @@ public class JSONObject implements IData {
         Method[] methods = includeSuperClass ? klass.getMethods() : klass.getDeclaredMethods();
         for (Method method1 : methods) {
             try {
-                Method method = method1;
-                if (Modifier.isPublic(method.getModifiers())) {
-                    String name = method.getName();
+                if (Modifier.isPublic(method1.getModifiers())) {
+                    String name = method1.getName();
                     String key = "";
                     if (name.startsWith("get")) {
                         if ("getClass".equals(name) || "getDeclaringClass".equals(name)) {
@@ -1368,14 +1364,14 @@ public class JSONObject implements IData {
                         key = name.substring(2);
                     }
                     if (key.length() > 0 && Character.isUpperCase(key.charAt(0))
-                            && method.getParameterTypes().length == 0) {
+                            && method1.getParameterTypes().length == 0) {
                         if (key.length() == 1) {
                             key = key.toLowerCase();
                         } else if (!Character.isUpperCase(key.charAt(1))) {
                             key = key.substring(0, 1).toLowerCase() + key.substring(1);
                         }
 
-                        Object result = method.invoke(bean, (Object[]) null);
+                        Object result = method1.invoke(bean, (Object[]) null);
                         if (result != null) {
                             this.map.put(key, wrap(result));
                         }
@@ -1477,7 +1473,7 @@ public class JSONObject implements IData {
      * @return this.
      * @throws JSONException If the value is non-finite number or if the key is null.
      */
-    public JSONObject put(String key, Object value) throws JSONException {
+    public JSONObject put(@NotNull String key, Object value) throws JSONException {
         if (key == null) {
             throw new NullPointerException("Null key.");
         }
@@ -1562,7 +1558,7 @@ public class JSONObject implements IData {
      * @return The value that was associated with the name, or null if there was
      * no value.
      */
-    public Object remove(String key) {
+    public Object remove(@NotNull String key) {
         return this.map.remove(key);
     }
 
@@ -1771,15 +1767,15 @@ public class JSONObject implements IData {
         }
     }
 
-    @Override
-    public JSONObject set(String key, Object value) {
+    @NotNull @Override
+    public JSONObject set(@NotNull String key, Object value) {
         put(key, value);
         return this;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T get(String key, Class<T> value) {
+    public <T> T get(@NotNull String key, @NotNull Class<T> value) {
         if (value == Object.class)
             return (T) this.get(key);
         if (value == String.class)
@@ -1795,12 +1791,12 @@ public class JSONObject implements IData {
         return null;
     }
 
-    @Override
+    @NotNull @Override
     public Collection<Object> values() {
         return map.values();
     }
 
-    @Override public Set<Entry<String, Object>> getEntries() {
+    @NotNull @Override public Set<Entry<String, Object>> getEntries() {
         return map.entrySet();
     }
 
@@ -1814,15 +1810,15 @@ public class JSONObject implements IData {
         return map.size();
     }
 
-    @Override
-    public IData load(InputStream in) {
+    @NotNull @Override
+    public IData load(@NotNull InputStream in) {
         this.map.clear();
         this.map.putAll(new JSONObject(new JSONTokener(in)).map);
         return this;
     }
 
-    @Override
-    public IData save(OutputStream out) {
+    @NotNull @Override
+    public IData save(@NotNull OutputStream out) {
         write(new OutputStreamWriter(out));
         return this;
     }
@@ -1842,10 +1838,10 @@ public class JSONObject implements IData {
         return values();
     }
 
-    @Nullable @Override public <T> T getOrSet(@NotNull String key, @NotNull Class<T> clazz, @Nullable T defaultValue) {
+    @Nullable @Override public <T> T getOrSet(@NotNull String key, @NotNull Class<T> clazz, @NotNull Function0<? extends T> block) {
         T t = get(key, clazz);
         if (t == null) {
-            t = defaultValue;
+            t = block.invoke();
             set(key, t);
         }
         return t;

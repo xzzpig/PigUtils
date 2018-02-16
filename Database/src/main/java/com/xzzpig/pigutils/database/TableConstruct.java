@@ -30,7 +30,7 @@ public abstract class TableConstruct {
     }
 
     public @Nullable DBField findPrimaryKeyField() {
-        return this.fields.stream().filter(field->field.isPrimaryKey()).findAny().orElse(null);
+        return this.fields.stream().filter(DBField::isPrimaryKey).findAny().orElse(null);
     }
 
     public @Nullable DBField findField(@NotNull String name) {

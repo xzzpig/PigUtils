@@ -12,6 +12,7 @@ open class MapData(protected val map: MutableMap<String, Any?>) : IData {
         map.clear()
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T> get(key: String, clazz: Class<T>): T? {
         return map[key] as? T
     }

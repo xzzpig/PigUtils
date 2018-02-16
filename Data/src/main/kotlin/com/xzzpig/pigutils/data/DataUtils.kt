@@ -68,14 +68,10 @@ fun <E> forEach(list: Array<E>, consumer: EachConsumer<E>): Boolean {
  * @return should reutrn
  */
 fun <E> forEach(list: List<E>, consumer: EachConsumer<E>): Boolean {
-    for (e in list) {
-        val result = consumer.consume(e)
-        if (result == EachResult.BREAK)
-            break
-        if (result == EachResult.RETURN)
-            return true
-    }
-    return false
+    return list
+            .map { consumer.consume(it) }
+            .takeWhile { it != EachResult.BREAK }
+            .contains(EachResult.RETURN)
 }
 
 fun <E> forEachWithIndex(list: Array<E>, consumer: WithIndexEachConsumer<E>): Boolean {
@@ -86,16 +82,11 @@ fun <E> forEachWithIndex(list: Array<E>, consumer: WithIndexEachConsumer<E>): Bo
  * @return should reutrn
  */
 fun <E> forEachWithIndex(list: List<E>, consumer: WithIndexEachConsumer<E>): Boolean {
-    var i = 0
-    for (e in list) {
-        val result = consumer.consume(e, i)
-        i++
-        if (result == EachResult.BREAK)
-            break
-        if (result == EachResult.RETURN)
-            return true
-    }
-    return false
+    return list
+            .asSequence()
+            .mapIndexed { i, e -> consumer.consume(e, i) }
+            .takeWhile { it != EachResult.BREAK }
+            .contains(EachResult.RETURN)
 }
 
 fun ints2Integers(ints: IntArray): Array<Int> = ints.toTypedArray()
@@ -249,7 +240,7 @@ fun Any.injectTo(data: IData, useGetMethod: Boolean = true, useField: Boolean = 
         }
     }
     if (!useField) return@apply
-    var fields: Array<Field> = if (useAllField) clazz.allFields.toTypedArray() else clazz.fields
+    val fields: Array<Field> = if (useAllField) clazz.allFields.toTypedArray() else clazz.fields
     for (field in fields) {
         val fieldName = field.name
         if (set.contains(fieldName)) continue

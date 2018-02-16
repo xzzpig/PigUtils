@@ -1,26 +1,5 @@
 package com.xzzpig.pigutils.pigsimpleweb.event;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
-
-import com.xzzpig.pigutils.event.Event;
-import com.xzzpig.pigutils.event.EventHandler;
-import com.xzzpig.pigutils.event.EventRunLevel;
-import com.xzzpig.pigutils.event.Listener;
-import com.xzzpig.pigutils.pigsimpleweb.MIME;
-import org.nanohttpd.protocols.http.IHTTPSession;
-import org.nanohttpd.protocols.http.request.Method;
-import org.nanohttpd.protocols.http.response.Response;
-import org.nanohttpd.protocols.http.response.Status;
-
 import com.xzzpig.pigutils.TScript;
 import com.xzzpig.pigutils.event.Event;
 import com.xzzpig.pigutils.event.EventHandler;
@@ -28,6 +7,20 @@ import com.xzzpig.pigutils.event.EventRunLevel;
 import com.xzzpig.pigutils.event.Listener;
 import com.xzzpig.pigutils.pigsimpleweb.MIME;
 import com.xzzpig.pigutils.pigsimpleweb.PigSWPage;
+import org.nanohttpd.protocols.http.IHTTPSession;
+import org.nanohttpd.protocols.http.request.Method;
+import org.nanohttpd.protocols.http.response.Response;
+import org.nanohttpd.protocols.http.response.Status;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class PigSWSListener implements Listener {
     public File findFile(File dir, String filename) {
@@ -138,10 +131,7 @@ public class PigSWSListener implements Listener {
                 Class<? extends PigSWPage> class1 = (Class<? extends PigSWPage>) urlClassLoader.loadClass(className);
                 PigSWPage page = class1.newInstance();
                 event.setResponse(page.getResponse(event.getPigSimpleWebServer(), event.getSession()));
-                return;
-            } catch (MalformedURLException | ClassNotFoundException | IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
+            } catch (MalformedURLException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             } catch (IOException e) {}
         }

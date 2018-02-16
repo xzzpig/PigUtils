@@ -1,19 +1,9 @@
 package com.xzzpig.pigutils.sql.sqlite;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import com.xzzpig.pigutils.sql.TSql;
+
+import java.io.*;
+import java.sql.*;
 
 public class TSqlite extends TSql {
 	Connection c;
@@ -75,14 +65,10 @@ public class TSqlite extends TSql {
 			bin.close();
 			Object object = oin.readObject();
 			return (T) object;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+        return null;
 	}
 
 	public boolean isTabbleExist(String tableName) {
@@ -93,7 +79,6 @@ public class TSqlite extends TSql {
 		try {
 			stm = c.createStatement();
 		} catch (SQLException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
 		try {

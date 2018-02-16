@@ -42,6 +42,7 @@ public class JavaPluginLoader extends URLPluginLoader {
             jarFile = new JarFile(file);
             ZipEntry jarEntry = jarFile.getEntry("plugin.json");
             JSONObject info = new JSONObject(new JSONTokener(jarFile.getInputStream(jarEntry)));
+            //noinspection SuspiciousToArrayCall
             URLPluginInfo pluginInfo = new URLPluginInfo(info.optString("name"), info.optString("main"),
                     info.optJSONArray("depends").toList().toArray(new String[0]), json2Map(info));
             objs[1] = pluginInfo;

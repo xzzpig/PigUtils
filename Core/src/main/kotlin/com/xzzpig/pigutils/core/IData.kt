@@ -27,10 +27,10 @@ interface IData {
         return t ?: defaultValue
     }
 
-    fun <T> getOrSet(key: String, clazz: Class<T>, defaultValue: T?): T? {
+    fun <T> getOrSet(key: String, clazz: Class<T>, block: () -> (T?)): T? {
         var t = get(key, clazz)
         if (t == null) {
-            t = defaultValue
+            t = block()
             set(key, t)
         }
         return t

@@ -80,49 +80,46 @@ public class TDownload {
 	}
 
 	public TDownload start(final File savedFile) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					File outFile = savedFile;
-					name = outFile.getName();
-					URLConnection conn = url.openConnection();
-					size = conn.getContentLength();
-					InputStream in = conn.getInputStream();
-					if (outFile.isDirectory()) {
-						outFile = new File(outFile, url.getFile());
-						outFile.createNewFile();
-					} else if (outFile.isFile()) {
-						if (!outFile.exists())
-							outFile.createNewFile();
-					}
-					FileOutputStream out = new FileOutputStream(outFile, false);
-					byte[] buffer = new byte[BUFFER_SIZE];
-					short i = 0;
-					while (true) {
-						int length = in.read(buffer);
-						if (length == -1)
-							break;
-						downloadsize += length;
-						out.write(buffer, 0, length);
-						if (print) {
-							for (int j = 0; j < (getPrecent() / 10 - i); j++) {
-								System.out.print("[" + i + "]");
-							}
-							i = (short) (getPrecent() / 10);
-						}
-					}
-					System.out.println();
-					in.close();
-					out.close();
-				} catch (Exception e) {
-					Debuger.print(e);
-					error = e;
-				} finally {
-					finish = true;
-				}
-			}
-		}).start();
+        new Thread(()->{
+            try {
+                File outFile = savedFile;
+                name = outFile.getName();
+                URLConnection conn = url.openConnection();
+                size = conn.getContentLength();
+                InputStream in = conn.getInputStream();
+                if (outFile.isDirectory()) {
+                    outFile = new File(outFile, url.getFile());
+                    outFile.createNewFile();
+                } else if (outFile.isFile()) {
+                    if (!outFile.exists())
+                        outFile.createNewFile();
+                }
+                FileOutputStream out = new FileOutputStream(outFile, false);
+                byte[] buffer = new byte[BUFFER_SIZE];
+                short i = 0;
+                while (true) {
+                    int length = in.read(buffer);
+                    if (length == -1)
+                        break;
+                    downloadsize += length;
+                    out.write(buffer, 0, length);
+                    if (print) {
+                        for (int j = 0; j < (getPrecent() / 10 - i); j++) {
+                            System.out.print("[" + i + "]");
+                        }
+                        i = (short) (getPrecent() / 10);
+                    }
+                }
+                System.out.println();
+                in.close();
+                out.close();
+            } catch (Exception e) {
+                Debuger.print(e);
+                error = e;
+            } finally {
+                finish = true;
+            }
+        }).start();
 		return this;
 	}
 }

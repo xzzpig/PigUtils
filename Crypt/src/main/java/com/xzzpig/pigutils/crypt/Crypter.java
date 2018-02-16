@@ -73,7 +73,7 @@ public abstract class Crypter {
         }
 
 
-        @Override public Crypter transform(String s, @Nullable Map<Object, ?> extras, Class<?> targetClass) {
+        @Override public Crypter transform(String s, @Nullable Map<Object, ?> extras, @NotNull Class<?> targetClass) {
             if (s.equals("crypt." + crypter.getCryptType()))
                 return crypter;
             else

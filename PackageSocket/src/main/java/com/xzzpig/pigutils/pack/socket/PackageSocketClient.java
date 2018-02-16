@@ -2,7 +2,6 @@ package com.xzzpig.pigutils.pack.socket;
 
 import com.xzzpig.pigutils.annotation.NotNull;
 import com.xzzpig.pigutils.pack.Package;
-import com.xzzpig.pigutils.reflect.ClassUtils;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -21,7 +20,6 @@ public abstract class PackageSocketClient extends PackageSocket implements Runna
     private Thread thread;
 
     public PackageSocketClient(@NotNull String ip, int port) {
-        ClassUtils.checkThisConstructorArgs(ip, port);
         this.ip = ip;
         this.port = port;
         this.started = new AtomicBoolean(false);

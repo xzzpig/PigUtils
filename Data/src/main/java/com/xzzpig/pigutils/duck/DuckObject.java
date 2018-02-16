@@ -3,7 +3,6 @@ package com.xzzpig.pigutils.duck;
 import com.xzzpig.pigutils.annotation.*;
 import com.xzzpig.pigutils.data.DataUtils;
 import com.xzzpig.pigutils.data.EachResult;
-import com.xzzpig.pigutils.reflect.AnnotatedElementCheckEvent;
 import com.xzzpig.pigutils.reflect.ClassUtils;
 import com.xzzpig.pigutils.reflect.MethodUtils;
 
@@ -18,10 +17,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @BaseOnPackage("com.github.xzzpig.pigutils.reflect")
 @Const(constField = true)
+@Deprecated
 public final class DuckObject {
 
     static {
-        AnnotatedElementCheckEvent.regAnnotatedElementChecker(DuckObject::isAnnounceMarched);
     }
 
     public final Object object;

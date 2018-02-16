@@ -69,9 +69,7 @@ public abstract class Command {
     public JSONObject runCommand(JSONObject args) {
         if (getArgs().entrySet().stream().anyMatch(e->{
             if (e.getValue().startsWith("[")) {
-                if (!args.has(e.getKey())) {
-                    return true;
-                }
+                return !args.has(e.getKey());
             }
             return false;
         }))

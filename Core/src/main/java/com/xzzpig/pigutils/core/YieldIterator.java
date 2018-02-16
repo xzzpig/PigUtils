@@ -1,5 +1,7 @@
 package com.xzzpig.pigutils.core;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -34,7 +36,7 @@ public class YieldIterator<E> implements Iterator<E>, Iterable<E> {
         }
     }
 
-    @Override public Iterator<E> iterator() {
+    @NotNull @Override public Iterator<E> iterator() {
         return this;
     }
 
@@ -55,6 +57,7 @@ public class YieldIterator<E> implements Iterator<E>, Iterable<E> {
         synchronized (thread) {
             thread.notifyAll();
         }
+        //noinspection unchecked
         return (E) value;
     }
 
