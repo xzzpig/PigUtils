@@ -2,7 +2,8 @@
 
 package com.xzzpig.pigutils.io
 
-import com.xzzpig.pigutils.core.later
+import com.xzzpig.pigutils.annotation.NotTested
+import com.xzzpig.pigutils.core.withTry
 import java.io.InputStream
 import java.io.OutputStream
 import java.io.Reader
@@ -20,30 +21,33 @@ operator fun GroupWriter.plusAssign(right: Writer) {
     this.add(right)
 }
 
-fun InputStream.copyToWithClose(out: OutputStream, bufferSize: Int = DEFAULT_BUFFER_SIZE, closeIn: Boolean = true, closeOut: Boolean = true) =
-        later {
-            if (closeIn)
-                this.close()
-            if (closeOut)
-                out.close()
-        }.map {
-            this.copyTo(out, bufferSize)
-        }
+@NotTested
+fun InputStream.copyToWithClose(out: OutputStream, bufferSize: Int = DEFAULT_BUFFER_SIZE, closeIn: Boolean = true, closeOut: Boolean = true): Long =
+        withTry(withBlock = {},
+                tryBlock = {
+                    this.copyTo(out, bufferSize)
+                },
+                finallyBlock = {
+                    if (closeIn) this.close()
+                    if (closeOut) out.close()
+                }
+        )!!
 
 fun Reader.copyTo(writer: Writer, bufferSize: Int = DEFAULT_BUFFER_SIZE, closeReader: Boolean = true, closeWriter: Boolean = true): Long =
-        later {
-            if (closeReader)
-                this.close()
-            if (closeWriter)
-                writer.close()
-        }.map {
-            var bytesCopied: Long = 0
-            val buffer = CharArray(bufferSize)
-            var bytes = read(buffer)
-            while (bytes >= 0) {
-                writer.write(buffer, 0, bytes)
-                bytesCopied += bytes
-                bytes = read(buffer)
-            }
-            return bytesCopied
-        }
+        withTry(withBlock = {},
+                tryBlock = {
+                    var bytesCopied: Long = 0
+                    val buffer = CharArray(bufferSize)
+                    var bytes = read(buffer)
+                    while (bytes >= 0) {
+                        writer.write(buffer, 0, bytes)
+                        bytesCopied += bytes
+                        bytes = read(buffer)
+                    }
+                    bytesCopied
+                },
+                finallyBlock = {
+                    if (closeWriter) writer.close()
+                    if (closeReader) this.close()
+                }
+        )!!

@@ -23,7 +23,8 @@ include(
         'PigCommandService',
         'Logger',
         "Dao",
-        "Web"
+        "Web",
+        "Mail"
 )
 
 rootProject.name = 'PigUtils'

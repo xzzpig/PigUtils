@@ -4,6 +4,7 @@ import com.xzzpig.pigutils.event.EventAdapter;
 import com.xzzpig.pigutils.event.EventBus;
 import com.xzzpig.pigutils.event.EventRunner;
 
+@Deprecated
 public class PigThread extends Thread implements EventAdapter {
     public EventBus e = new EventBus();
 

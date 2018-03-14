@@ -130,3 +130,28 @@ class WeakRef<in R, out T>(private val block: () -> T) : ReadOnlyProperty<R, T> 
 
 
 }
+
+inline fun <T, R> withTry(withBlock: () -> T, tryBlock: (T) -> R, cacheBlock: (Exception) -> Unit = {}, finallyBlock: (T) -> Unit = {}): R? {
+    val res: T
+    try {
+        res = withBlock()
+    } catch (e: Exception) {
+        return null
+    }
+    return try {
+        tryBlock(res)
+    } catch (e: Exception) {
+        cacheBlock(e)
+        null
+    } finally {
+        justTry {
+            finallyBlock(res)
+        }
+    }
+}
+
+inline fun Int.times(block: (Int) -> Unit) {
+    for (i in 0 until this) {
+        block(i)
+    }
+}

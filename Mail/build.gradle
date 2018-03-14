@@ -1,10 +1,13 @@
 repositories {
     jcenter()
     maven { url 'https://jitpack.io' }
+    mavenCentral()
 }
 
 dependencies {
+    testCompile 'junit:junit:4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-    testCompile 'junit:junit:4.12'
+    //javaMail
+    compile group: 'com.sun.mail', name: 'javax.mail', version: '1.6.1'
 }

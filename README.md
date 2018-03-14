@@ -1,6 +1,5 @@
-# PigSubUtils
+# PigUtils
 
 ### 幻猪的JVM工具类(Java&Kotlin)
-
-####依赖使用
+[![Build Status](https://travis-ci.org/xzzpig/PigUtils.svg?branch=dev)](https://travis-ci.org/xzzpig/PigUtils)
 [![](https://jitpack.io/v/xzzpig/PigUtils.svg)](https://jitpack.io/#xzzpig/PigUtils)
