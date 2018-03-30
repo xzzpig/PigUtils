@@ -27,8 +27,8 @@ open class BaseServlet(val methodKey: String = "method", val defaultCharset: Cha
     override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
         if (recodeGetParam) {
             doPost(object : HttpServletRequestWrapper(req) {
-                override fun getParameter(name: String?): String {
-                    return super.getParameter(name).toByteArray(oldCharset).toString(defaultCharset)
+                override fun getParameter(name: String?): String? {
+                    return req.getParameter(name)?.toByteArray(oldCharset)?.toString(defaultCharset)
                 }
             }, resp)
         } else
@@ -41,7 +41,7 @@ open class BaseServlet(val methodKey: String = "method", val defaultCharset: Cha
         val method = req.getParameter(methodKey)?.takeIf { it.isNotBlank() } ?: "doDefault"
         doInit(method, req, resp)
         val javaMethod = try {
-            methodMap.getOrPut(methodKey) {
+            methodMap.getOrPut(method) {
                 this.javaClass.getMethod(method, HttpServletRequest::class.java, HttpServletResponse::class.java)
             }
         } catch (e: NoSuchMethodException) {

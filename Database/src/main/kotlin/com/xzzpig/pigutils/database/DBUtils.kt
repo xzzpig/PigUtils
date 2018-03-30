@@ -1,5 +1,6 @@
 package com.xzzpig.pigutils.database
 
+import com.xzzpig.pigutils.annotation.ResourceClose
 import com.xzzpig.pigutils.core.TransformManager
 import com.xzzpig.pigutils.core.to
 import com.xzzpig.pigutils.data.toBean
@@ -25,8 +26,8 @@ class DBUtils(connectionCreator: () -> Connection) {
 
     companion object {
         @JvmStatic
-        fun with(conn: Connection, block: Connection.() -> Unit) {
-            conn.with(block)
+        inline fun with(conn: Connection, block: Connection.() -> Unit) {
+            conn.with(block = block)
         }
 
         @JvmStatic
@@ -85,13 +86,19 @@ class DBUtils(connectionCreator: () -> Connection) {
     val hasTransaction: Boolean
         get() = threadLocal.get() != null
 
-    inline fun withTransaction(rethrow: Boolean = true, block: DBUtils.() -> Unit) {
-        try {
+    inline fun <T> withConnection(rethrow: Boolean = true, block: Connection.() -> T): T? {
+        return getConnection().with(rethrow, block)
+    }
+
+    @ResourceClose
+    inline fun <T> withTransaction(rethrow: Boolean = true, block: DBUtils.() -> T): T? {
+        return try {
             startTransaction()
             block(this)
         } catch (e: Exception) {
             endTransaction(true)
             if (rethrow) throw e
+            else null
         } finally {
             if (hasTransaction) endTransaction()
         }
@@ -122,12 +129,14 @@ class DBUtils(connectionCreator: () -> Connection) {
 val Connection.isForTransaction: Boolean get() = this is DBUtils.TransactionConnection
 
 @Throws(SQLException::class)
+@ResourceClose(false)
 fun Connection.update(sql: String, vararg params: Any): Int =
         prepareStatement(sql).apply {
             setParams(*params)
         }.executeUpdate()
 
 @Throws(SQLException::class)
+@ResourceClose(false)
 fun Connection.insert(sql: String, vararg parms: Any): Boolean =
         prepareStatement(sql).apply {
             setParams(*parms)
@@ -135,6 +144,7 @@ fun Connection.insert(sql: String, vararg parms: Any): Boolean =
 
 
 @Throws(SQLException::class)
+@ResourceClose(false)
 fun <T> Connection.query(sql: String, resultSetHandler: ResultSetHandler<T>, vararg params: Any): T =
         prepareStatement(sql).apply {
             setParams(*params)
@@ -145,15 +155,26 @@ fun PreparedStatement.setParams(vararg params: Any) {
         this.setObject(i, params[i - 1])
 }
 
-fun Connection.with(block: Connection.() -> Unit) {
-    this.autoCommit = false
-    try {
-        block(this)
-        this.commit()
-    } catch (e: SQLException) {
-        this.rollback()
-    } finally {
-        this.close()
+/**
+ * @param rethrow 是否再次丢出错误，对用于事务的[Connection]无效
+ */
+@ResourceClose
+inline fun <T> Connection.with(rethrow: Boolean = false, block: Connection.() -> T): T? {
+    if (!this.isForTransaction) {
+        this.autoCommit = false
+        var t: T? = null
+        try {
+            t = block(this)
+            this.commit()
+        } catch (e: SQLException) {
+            this.rollback()
+            if (rethrow) throw e
+        } finally {
+            this.close()
+        }
+        return t
+    } else {
+        return block(this)
     }
 }
 
@@ -175,6 +196,13 @@ interface ResultSetHandler<out T> {
                     override fun handle(resultSet: ResultSet): T {
                         resultSet.next()
                         return resultSet.to(clazz)
+                    }
+                }
+
+        fun getHasResultHandler() =
+                object : ResultSetHandler<Boolean> {
+                    override fun handle(resultSet: ResultSet): Boolean {
+                        return resultSet.next()
                     }
 
                 }
@@ -229,6 +257,14 @@ interface ResultSetHandler<out T> {
                 }
             }
         }
+
+        fun <T : Any> getAloneHandler(clazz: Class<out T>, rowID: String, rowType: Int): ResultSetHandler<T> =
+                object : ResultSetHandler<T> {
+                    override fun handle(resultSet: ResultSet): T {
+                        resultSet.next()
+                        return JDBC_TYPEGETTER_MAP[rowType]?.invoke(resultSet, rowID) as T
+                    }
+                }
     }
 
     fun handle(resultSet: ResultSet): T

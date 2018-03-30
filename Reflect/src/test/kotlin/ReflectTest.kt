@@ -12,11 +12,11 @@ class ReflectTest {
         reflect["s"] = null
         println(reflect["s"])
         reflect("aaaa", 123)
-        reflect["i"] = 22
+        reflect["i"] = 1 as Int?
         println(reflect["i"])
     }
 
-    data class TestData(private val i: Int, val s: String?) {
+    data class TestData(private val i: Int, var s: String?) {
         fun aaaa() {
             println(i)
         }

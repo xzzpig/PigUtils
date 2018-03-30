@@ -4,8 +4,11 @@ package com.xzzpig.pigutils.data
 
 import com.xzzpig.pigutils.annotation.BaseOnClass
 import com.xzzpig.pigutils.annotation.NotNull
+import com.xzzpig.pigutils.annotation.TestPass
 import com.xzzpig.pigutils.core.*
 import com.xzzpig.pigutils.reflect.allFields
+import com.xzzpig.pigutils.reflect.reflect
+import com.xzzpig.pigutils.reflect.utils
 import java.lang.reflect.Field
 import java.util.*
 import java.util.Arrays.asList
@@ -166,45 +169,63 @@ fun <K, V> MutableMap<K, V>.observable(): ObservableMap<K, V> = ObservableMap(th
 
 fun MutableMap<String, Any?>.toIData(): IData = MapData(this)
 
+@TestPass
 fun <T : Any> IData.injectTo(obj: T, transformManager: TransformManager = TransformManager.DefaultManager): T = obj.apply {
-    val clazz = this::class.java
-    val set = mutableSetOf<String>()
-    for (method in clazz.methods) {
-        val methodName = method.name
-        if (!methodName.startsWith("set")) continue
-        val parameterTypes = method.parameterTypes
-        if (parameterTypes.size != 1) continue
-        val fieldName = String(methodName.substring(3).toCharArray().apply { this[0] = this[0].toLowerCase() })
-        var value: Any? = this@injectTo[fieldName] ?: continue
+    //    val set = mutableSetOf<String>()
+    val content = obj.reflect
+    content.injector.transformManager = transformManager
+    this@injectTo.entries.forEach {
         justTry {
-            if ((!parameterTypes[0].isInstance(value)))
-                value = transformManager.transform(clazz = parameterTypes[0], from = value)
-            if (value == null || (!parameterTypes[0].isInstance(value))) {
-                value = (this@injectTo[fieldName] as? IData)?.toBean(parameterTypes[0], transformManager)
+            content[it.key] = it.value
+        }
+        justTry {
+            if (content[it.key] == null && it.value != null && it.value is IData) {
+                val clazz = this::class.java
+                val field = clazz.utils.getField(it.key)
+                if (field != null) {
+                    content[it.key] = (it.value as IData).toBean(field.type)
+                }
             }
-            if (value == null) return@justTry
-            method.isAccessible = true
-            method(this, value)
-            set.add(fieldName)
         }
     }
-    for (field in clazz.allFields) {
-        val fieldName = field.name
-        if (set.contains(fieldName)) continue
-        val fieldType = field.type
-        var value: Any? = this@injectTo[fieldName] ?: continue
-        justTry {
-            if ((!fieldType.isInstance(value)))
-                value = transformManager.transform(clazz = fieldType, from = value)
-            if (value == null || (!fieldType.isInstance(value))) {
-                value = (this@injectTo[fieldName] as? IData)?.toBean(fieldType, transformManager)
-            }
-            if (value == null) return@justTry
-            field.isAccessible = true
-            field[this] = value
-            set.add(fieldName)
-        }
-    }
+//    for (method in clazz.methods) {
+//        val methodName = method.name
+//        if (!methodName.startsWith("set")) continue
+//        val parameterTypes = method.parameterTypes
+//        if (parameterTypes.size != 1) continue
+//        val fieldName = String(methodName.substring(3).toCharArray().apply { this[0] = this[0].toLowerCase() })
+//        var value: Any? = this@injectTo[fieldName] ?: continue
+//        justTry {
+//            //            if ((!parameterTypes[0].isInstance(value)))
+////                value = transformManager.transform(clazz = parameterTypes[0], from = value)
+////            if (value == null || (!parameterTypes[0].isInstance(value))) {
+////                value = (this@injectTo[fieldName] as? IData)?.toBean(parameterTypes[0], transformManager)
+////            }
+////            if (value == null) return@justTry
+////            method.isAccessible = true
+////            method(this, value)
+//            content[fieldName] = value
+//            set.add(fieldName)
+//        }
+//    }
+//    for (field in clazz.allFields) {
+//        val fieldName = field.name
+//        if (set.contains(fieldName)) continue
+//        val fieldType = field.type
+//        var value: Any? = this@injectTo[fieldName] ?: continue
+//        justTry {
+//            //            if ((!fieldType.isInstance(value)))
+////                value = transformManager.transform(clazz = fieldType, from = value)
+////            if (value == null || (!fieldType.isInstance(value))) {
+////                value = (this@injectTo[fieldName] as? IData)?.toBean(fieldType, transformManager)
+////            }
+////            if (value == null) return@justTry
+////            field.isAccessible = true
+////            field[this] = value
+//            content[fieldName] = value
+//            set.add(fieldName)
+//        }
+//}
 }
 
 fun <T : Any> IData.toBean(creator: () -> T, transformManager: TransformManager = TransformManager.DefaultManager) = injectTo(creator(), transformManager)

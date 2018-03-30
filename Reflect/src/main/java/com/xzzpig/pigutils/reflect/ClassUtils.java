@@ -199,4 +199,25 @@ public class ClassUtils<T> {
         }
         return true;
     }
+
+    /**
+     * @return 是否是基本类型的包装类
+     */
+    public boolean isWarpClass() {
+        return hasField("TYPE");
+    }
+
+    /**
+     * @return 是否是基本类型
+     */
+    public boolean isRawClass() {
+        if (clazz == int.class) return true;
+        if (clazz == long.class) return true;
+        if (clazz == short.class) return true;
+        if (clazz == byte.class) return true;
+        if (clazz == char.class) return true;
+        if (clazz == float.class) return true;
+        if (clazz == double.class) return true;
+        return clazz == boolean.class;
+    }
 }

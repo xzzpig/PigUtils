@@ -80,6 +80,20 @@ inline fun justTry(printStackTrace: Boolean = false, block: () -> Unit) {
     }
 }
 
+inline fun <T> returnTry(printStackTrace: Boolean = false, block: () -> T): T? = try {
+    block()
+} catch (e: Exception) {
+    if (printStackTrace) e.printStackTrace()
+    null
+}
+
+inline fun testTry(block: () -> Unit): Exception? = try {
+    block()
+    null
+} catch (e: Exception) {
+    e
+}
+
 inline operator fun <reified T> IData.get(key: String, defaultValue: T? = null): T? = get(key, T::class.java, defaultValue)
 
 inline fun <reified T> IData.getOrSet(key: String, noinline block: () -> (T?)): T? = getOrSet(key, T::class.java, block)

@@ -50,7 +50,7 @@ class DataTest {
 
     @Test
     fun testInject() {
-        val data = MapData(mutableMapOf("aaa" to "bbb", "ccc" to 123, "ddd" to "456", "testBean" to MapData(mutableMapOf("aaa" to "ccc", "ccc" to 233, "ddd" to "444"))))
+        val data = MapData(mutableMapOf("aaa" to "bbb", "ccc" to 123, "ddd" to 456, "testBean" to MapData(mutableMapOf("aaa" to "ccc", "ccc" to 233, "ddd" to "444"))))
         println(data)
         val bean = TestBean().apply { data.injectTo(this) }
         println(bean)
@@ -59,7 +59,7 @@ class DataTest {
         println(bean.injectTo(data, classFilter = { if (it == TestBean::class.java) IData::class.java else null }))
     }
 
-    data class TestBean(val aaa: String? = null, var ccc: String? = null, var ddd: Int? = null, var testBean: TestBean? = null)
+    data class TestBean(val aaa: String? = null, var ccc: String? = null, var ddd: Int = 0, var testBean: TestBean? = null)
 
     @Test
     fun test(): Unit {
